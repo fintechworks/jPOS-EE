@@ -38,12 +38,12 @@ public class FlywaySupport implements LogCreator, Log {
         LogFactory.setFallbackLogCreator(this);
         Properties p = new DB(configModifier).getProperties();
         FluentConfiguration config = Flyway.configure()
-          .configuration(getConfigurationProperties())
-          .dataSource(
-            p.getProperty("hibernate.connection.url"),
-            p.getProperty("hibernate.connection.username"),
-            p.getProperty("hibernate.connection.password"))
-          .outOfOrder(has(args, "--out-of-order"));
+                .configuration(getConfigurationProperties())
+                .dataSource(
+                        p.getProperty("hibernate.connection.url"),
+                        p.getProperty("hibernate.connection.username"),
+                        p.getProperty("hibernate.connection.password"))
+                .outOfOrder(has(args, "--out-of-order"));
         return config.load();
     }
 
@@ -82,12 +82,17 @@ public class FlywaySupport implements LogCreator, Log {
         e.printStackTrace(System.err);
     }
 
-    private boolean has (String[] args, String arg) {
+    @Override
+    public void notice(String message) {
+        System.out.println("NOTICE: " + message);
+    }
+
+    private boolean has(String[] args, String arg) {
         return Arrays.asList(args).contains(arg);
     }
 
-    private Map<String,String> getConfigurationProperties() {
-        String[] names = new String[] {
+    private Map<String, String> getConfigurationProperties() {
+        String[] names = new String[]{
           ConfigUtils.CONFIG_FILE_NAME,
           ConfigUtils.CONFIG_FILES,
           ConfigUtils.CONFIG_FILE_ENCODING,
@@ -98,28 +103,34 @@ public class FlywaySupport implements LogCreator, Log {
           ConfigUtils.CALLBACKS,
           ConfigUtils.CLEAN_DISABLED,
           ConfigUtils.CLEAN_ON_VALIDATION_ERROR,
-          ConfigUtils.CONNECT_RETRIES ,
+          ConfigUtils.CONNECT_RETRIES,
+          ConfigUtils.CONNECT_RETRIES_INTERVAL,
+          ConfigUtils.DEFAULT_SCHEMA,
           ConfigUtils.DRIVER,
           ConfigUtils.DRYRUN_OUTPUT,
           ConfigUtils.ENCODING,
+          ConfigUtils.DETECT_ENCODING,
           ConfigUtils.ERROR_OVERRIDES,
           ConfigUtils.GROUP,
-          ConfigUtils.IGNORE_FUTURE_MIGRATIONS,
-          ConfigUtils.IGNORE_MISSING_MIGRATIONS,
-          ConfigUtils.IGNORE_IGNORED_MIGRATIONS,
-          ConfigUtils.IGNORE_PENDING_MIGRATIONS,
+          ConfigUtils.IGNORE_MIGRATION_PATTERNS,
           ConfigUtils.INIT_SQL,
           ConfigUtils.INSTALLED_BY,
           ConfigUtils.LICENSE_KEY,
           ConfigUtils.LOCATIONS,
           ConfigUtils.MIXED,
           ConfigUtils.OUT_OF_ORDER,
+          ConfigUtils.SKIP_EXECUTING_MIGRATIONS,
           ConfigUtils.OUTPUT_QUERY_RESULTS,
           ConfigUtils.PASSWORD,
           ConfigUtils.PLACEHOLDER_PREFIX,
           ConfigUtils.PLACEHOLDER_REPLACEMENT,
           ConfigUtils.PLACEHOLDER_SUFFIX,
+          ConfigUtils.PLACEHOLDER_SEPARATOR,
+          ConfigUtils.SCRIPT_PLACEHOLDER_PREFIX,
+          ConfigUtils.SCRIPT_PLACEHOLDER_SUFFIX,
           ConfigUtils.PLACEHOLDERS_PROPERTY_PREFIX,
+          ConfigUtils.LOCK_RETRY_COUNT,
+          ConfigUtils.JDBC_PROPERTIES_PREFIX,
           ConfigUtils.REPEATABLE_SQL_MIGRATION_PREFIX,
           ConfigUtils.RESOLVERS,
           ConfigUtils.SCHEMAS,
@@ -132,17 +143,26 @@ public class FlywaySupport implements LogCreator, Log {
           ConfigUtils.TABLE,
           ConfigUtils.TABLESPACE,
           ConfigUtils.TARGET,
+          ConfigUtils.CHERRY_PICK,
           ConfigUtils.UNDO_SQL_MIGRATION_PREFIX,
           ConfigUtils.URL,
           ConfigUtils.USER,
           ConfigUtils.VALIDATE_ON_MIGRATE,
+          ConfigUtils.VALIDATE_MIGRATION_NAMING,
+          ConfigUtils.CREATE_SCHEMAS,
+          ConfigUtils.FAIL_ON_MISSING_LOCATIONS,
+          ConfigUtils.LOGGERS,
+          ConfigUtils.KERBEROS_CONFIG_FILE,
           ConfigUtils.ORACLE_SQLPLUS,
           ConfigUtils.ORACLE_SQLPLUS_WARN,
+          ConfigUtils.ORACLE_KERBEROS_CACHE_FILE,
+          ConfigUtils.ORACLE_WALLET_LOCATION,
           ConfigUtils.JAR_DIRS,
-          ConfigUtils.CONFIGURATIONS
+          ConfigUtils.CONFIGURATIONS,
+          ConfigUtils.FLYWAY_PLUGINS_PREFIX
         };
-        Map<String,String> props = new HashMap<>();
-        props.put (ConfigUtils.CLEAN_DISABLED, "true");
+        Map<String, String> props = new HashMap<>();
+        props.put(ConfigUtils.CLEAN_DISABLED, "true");
         for (String name : names) {
             String v = Environment.get(String.format("${%s}", name), null);
             if (v != null) {

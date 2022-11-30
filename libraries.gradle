@@ -22,7 +22,7 @@ ext {
     mysqlJDBCVersion = '8.0.28'
     c3p0Version = '0.9.5.4'
     postgresJDBCVersion = '42.2.13'
-    flywaydbVersion = '6.0.4'
+    flywaydbVersion = '9.5.1'
     liquibaseVersion = '3.8.0'
     elkVersion = '7.16.1'
     orgjsonVersion = '20200518'

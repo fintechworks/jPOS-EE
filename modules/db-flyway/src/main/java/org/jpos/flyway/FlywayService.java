@@ -22,6 +22,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationInfoService;
 import org.flywaydb.core.api.MigrationVersion;
+import org.flywaydb.core.api.output.MigrateResult;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
 import org.jdom2.Element;
 import org.jpos.core.Environment;
@@ -55,8 +56,8 @@ public class FlywayService extends QBeanSupport implements XmlConfigurable {
                         getLog().info("FLYWAY: repair done");
                         break;
                     case "migrate":
-                        int count = flyway.migrate();
-                        getLog().info ("FLYWAY: applied " + count + " migration(s)");
+                        MigrateResult count = flyway.migrate();
+                        getLog().info ("FLYWAY: applied " + count.migrationsExecuted + " migration(s)");
                         break;
                     case "validate":
                         flyway.validate();

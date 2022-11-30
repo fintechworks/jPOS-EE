@@ -19,6 +19,7 @@
 package org.jpos.q2.cli.flyway;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.output.MigrateResult;
 import org.jpos.flyway.FlywaySupport;
 import org.jpos.q2.CLICommand;
 import org.jpos.q2.CLIContext;
@@ -29,8 +30,8 @@ public class MIGRATE extends FlywaySupport implements CLICommand{
     public void exec(CLIContext cli, String[] args) {
         try {
             Flyway flyway = getFlyway((String) cli.getUserData().get(FLYWAY.PREFIX), args);
-            int migrations = flyway.migrate();
-            cli.println ("Applied " + migrations + " migration(s)");
+            MigrateResult migrations = flyway.migrate();
+            cli.println ("Applied " + migrations.migrationsExecuted + " migration(s)");
         } catch (Exception e) {
             cli.println(e.getMessage());
         }
