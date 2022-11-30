@@ -1,5 +1,3 @@
-apply from: 'libraries.gradle'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -9,12 +7,19 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.jfrog.artifactory" version "4.29.0"
+}
+
+apply from: 'libraries.gradle'
+
+
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'org.owasp.dependencycheck'
 
-    group = 'org.jpos.ee'
+    group = 'org.jpos.ee.fintech'
     version = '2.2.9-SNAPSHOT'
 
     gradle.projectsEvaluated {

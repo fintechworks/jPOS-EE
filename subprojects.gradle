@@ -28,7 +28,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = 'jPOS Project'
-                description = "jPOS Extended Edition"
+                description = "jPOS Extended Edition (fintech.works fork)"
                 url = "http://jpos.org"
                 organization {
                     name = 'jPOS.org'
@@ -60,10 +60,9 @@ publishing {
                 }
             }
 
-            groupId = 'org.jpos.ee'
-            artifactId = 'jposee'
+            groupId = 'org.jpos.ee.fintech'
             from components.java
-            artifactId="jposee-${project.name}"
+            artifactId = "jposee-${project.name}"
         }
     }
 } // publishing

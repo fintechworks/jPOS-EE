@@ -1,5 +1,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
+apply plugin: 'com.jfrog.artifactory'
 
 def isSnapshot = version.contains("SNAPSHOT")
 def mavenCentralRepo = isSnapshot ?
@@ -35,3 +36,26 @@ repositories {
     mavenLocal()
 }
 
+artifactory {
+    contextUrl = "${artifactory_url}"
+
+    publish {
+        repository {
+            repoKey = 'libs-snapshot-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+
+        defaults {
+            publications 'mavenJava'
+            publishBuildInfo = true
+            publishArtifacts = true
+            publishPom = true
+            publishIvy = false
+        }
+    }
+
+    clientConfig.includeEnvVars = true
+    clientConfig.envVarsExcludePatterns = '*pwd*,*password*,*PWD*,*PASSWORD*,*Password,*secret*,*SECRET*,*key*,*KEY*,sonar.login'
+    clientConfig.info.buildNumber = version
+}
