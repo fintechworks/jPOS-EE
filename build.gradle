@@ -20,7 +20,7 @@ allprojects {
     apply plugin: 'org.owasp.dependencycheck'
 
     group = 'org.jpos.ee.fintech'
-    version = '2.2.9-SNAPSHOT'
+    version = '3.0.1-SNAPSHOT'
 
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
