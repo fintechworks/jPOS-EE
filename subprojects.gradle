@@ -67,11 +67,11 @@ publishing {
     }
 } // publishing
 
-signing {
-    def isSnapshot = version.contains("SNAPSHOT")
-    required { !isSnapshot }
-    sign publishing.publications.mavenJava
-}
+//signing {
+    //def isSnapshot = version.contains("SNAPSHOT")
+    //required { !isSnapshot }
+    //sign publishing.publications.mavenJava
+//}
 
 task allDeps(type: DependencyReportTask) {}
 

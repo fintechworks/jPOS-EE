@@ -41,7 +41,7 @@ artifactory {
 
     publish {
         repository {
-            repoKey = 'libs-snapshot-local'
+            repoKey = 'libs-release-local'
             username = "${artifactory_user}"
             password = "${artifactory_password}"
         }
