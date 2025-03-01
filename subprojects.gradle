@@ -1,8 +1,8 @@
 apply plugin: 'java-library'
 apply plugin: 'signing'
 
-sourceCompatibility = 21
-targetCompatibility = 21
+sourceCompatibility = 23
+targetCompatibility = 23
 [ compileJava, compileTestJava, javadoc ]*.options*.encoding = 'UTF-8'
 
 

@@ -1,5 +1,5 @@
 ext {
-    jposVersion = '2.1.8-SNAPSHOT'
+    jposVersion = '3.0.2'
     slf4jVersion = '1.7.28'
     logbackVersion = '1.2.8'
     hibernateVersion = '6.1.5.Final'
@@ -34,7 +34,7 @@ ext {
             junit: 'org.junit.jupiter:junit-jupiter:5.5.2',
 
             //jPOS
-            jpos: "org.jpos:jpos:${jposVersion}",
+            jpos: "org.jpos.fintech:jpos:${jposVersion}",
 
             //Apache Commons
             commons_lang: 'org.apache.commons:commons-lang3:3.9',

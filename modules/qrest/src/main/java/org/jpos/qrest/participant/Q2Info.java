@@ -18,16 +18,9 @@
 
 package org.jpos.qrest.participant;
 
-import java.io.File;
-import java.io.Serializable;
-import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import io.netty.handler.codec.http.*;
 import org.jpos.core.Configurable;
 import org.jpos.core.Configuration;
-import org.jpos.core.ConfigurationException;
 import org.jpos.q2.Q2;
 import org.jpos.q2.iso.QMUX;
 import org.jpos.qrest.Response;
@@ -35,8 +28,13 @@ import org.jpos.qrest.Route;
 import org.jpos.transaction.Context;
 import org.jpos.transaction.TransactionManager;
 import org.jpos.transaction.TransactionParticipant;
-import org.jpos.util.Caller;
 import org.jpos.util.NameRegistrar;
+
+import java.io.File;
+import java.io.Serializable;
+import java.net.URI;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.jpos.qrest.Constants.REQUEST;
 import static org.jpos.qrest.Constants.RESPONSE;
@@ -127,7 +125,7 @@ public class Q2Info implements TransactionParticipant, Configurable {
         m.put ("rxPending", mux.getRXPending());
         m.put ("rxUnhandled", mux.getRXUnhandled());
         m.put ("rxForwarded", mux.getRXForwarded());
-        m.put ("metrics", mux.getMetrics().metrics());
+//        m.put ("metrics", mux.getMetrics().metrics());
         long last = mux.getLastTxnTimestampInMillis();
         if (last > 0) {
             m.put("last", new Date(last));
@@ -179,8 +177,8 @@ public class Q2Info implements TransactionParticipant, Configurable {
         m.put ("TPSPeak", txnmgr.getTPSPeak());
         m.put ("TPSPeakWhen", txnmgr.getTPSPeakWhen());
         m.put ("TPSElapsed", txnmgr.getTPSElapsed());
-        if (txnmgr.getMetrics() != null)
-            m.put ("metrics", txnmgr.getMetrics().metrics());
+//        if (txnmgr.getMetrics() != null)
+//            m.put ("metrics", txnmgr.getMetrics().metrics());
         return m;
     }
 
@@ -190,7 +188,7 @@ public class Q2Info implements TransactionParticipant, Configurable {
         routes.add(new Route<>(prefix + "/q2/applicationVersion**", "GET", (t,s) -> mapOf("applicationVersion", Q2.getAppVersionString())));
         routes.add(new Route<>(prefix + "/q2/instanceId**", "GET", (t,s) -> mapOf("instanceId", q2.getInstanceId())));
         routes.add(new Route<>(prefix + "/q2/uptime**", "GET", (t,s) -> mapOf("uptime", q2.getUptime())));
-        routes.add(new Route<>(prefix + "/q2/started**", "GET", (t,s) -> mapOf("started", new Date(System.currentTimeMillis() - q2.getUptime()))));
+        routes.add(new Route<>(prefix + "/q2/started**", "GET", (t,s) -> mapOf("started", new Date(System.currentTimeMillis() - q2.getUptime().toMillis()))));
         routes.add(new Route<>(prefix + "/q2/diskspace**", "GET", (t,s) -> diskspace()));
         routes.add(new Route<>(prefix + "/q2/mux/{muxname}/connected", "GET", (t,s) -> connected(t,s)));    // like below, but returns HTTP code 503 if mux not connected
         routes.add(new Route<>(prefix + "/q2/mux/{muxname}**", "GET", (t,s) -> muxInfo(t,s)));
