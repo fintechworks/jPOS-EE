@@ -49,6 +49,7 @@ public class RestSession extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ch, Object msg) throws Exception {
+        server.getLog().info("channelRead message:  " + msg.getClass().getName());
         if (msg instanceof FullHttpRequest) {
             final FullHttpRequest request = (FullHttpRequest) msg;
             if (request.method().equals(HttpMethod.OPTIONS)) {

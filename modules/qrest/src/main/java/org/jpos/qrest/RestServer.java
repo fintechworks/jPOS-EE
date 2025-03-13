@@ -164,8 +164,13 @@ public class RestServer extends QBeanSupport implements Runnable, XmlConfigurabl
     }
 
     @SuppressWarnings("unchecked")
-    public void queue (FullHttpRequest request, Context ctx) {
-        sp.out(getQueue(request), ctx, 60000L);
+    public void queue(FullHttpRequest request, Context ctx) {
+        getLog().info("Trying to push context into queue ");
+        String queueName = getQueue(request);
+
+        getLog().info("Queue name: " + queueName);
+        sp.out(queueName, ctx, 60000L);
+        getLog().info("Context pushed into queue : " + queueName);
     }
 
     public CorsConfig getCorsConfig (FullHttpRequest request) {
