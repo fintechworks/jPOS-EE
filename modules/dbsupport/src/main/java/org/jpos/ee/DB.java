@@ -54,6 +54,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Alejandro P. Revilla
@@ -64,8 +65,9 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public class DB implements Closeable {
-    Session session;
-    Log log;
+    private final ReentrantLock lockSession = new ReentrantLock();
+    private Session session;
+    private Log log;
     String configModifier;
     private Dialect dialect;
 
@@ -327,13 +329,13 @@ public class DB implements Closeable {
      * @return HibernateSession associated with this DB object
      * @throws HibernateException
      */
-    public synchronized Session open() throws HibernateException
-    {
-        if (session == null)
-        {
-            session = getSessionFactory().openSession();
+    public Session open() throws HibernateException {
+        lockSession.lock();
+        try {
+            return session == null ? (session = getSessionFactory().openSession()) : session;
+        } finally {
+            lockSession.unlock();
         }
-        return session;
     }
 
     /**
@@ -341,21 +343,28 @@ public class DB implements Closeable {
      *
      * @throws HibernateException
      */
-    public synchronized void close() throws HibernateException
-    {
-        if (session != null)
-        {
-            session.close();
-            session = null;
+    public void close() throws HibernateException {
+        if (session != null) {
+            lockSession.lock();
+            try {
+                session.close();
+                session = null;
+            } finally {
+                lockSession.unlock();
+            }
         }
     }
 
     /**
      * @return session hibernate Session
      */
-    public Session session()
-    {
-        return session;
+    public Session session() {
+        lockSession.lock();
+        try {
+            return session;
+        } finally {
+            lockSession.unlock();
+        }
     }
 
     /**
@@ -387,12 +396,11 @@ public class DB implements Closeable {
      * @return newly created Transaction
      * @throws HibernateException
      */
-    public synchronized Transaction beginTransaction() throws HibernateException
-    {
-        return session.beginTransaction();
+    public Transaction beginTransaction() throws HibernateException {
+        return session().beginTransaction();
     }
 
-    public synchronized void commit()
+    public void commit()
     {
         if (session() != null)
         {
@@ -404,7 +412,7 @@ public class DB implements Closeable {
         }
     }
 
-    public synchronized void rollback()
+    public void rollback()
     {
         if (session() != null)
         {
@@ -421,25 +429,25 @@ public class DB implements Closeable {
      * @return newly created Transaction
      * @throws HibernateException
      */
-    public synchronized Transaction beginTransaction(int timeout) throws HibernateException
+    public Transaction beginTransaction(int timeout) throws HibernateException
     {
-        Transaction tx = session.getTransaction();
+        Transaction tx = session().getTransaction();
         if (timeout > 0)
             tx.setTimeout(timeout);
         tx.begin();
         return tx;
     }
 
-    public synchronized Log getLog()
+    public Log getLog()
     {
         if (log == null)
         {
-            log = Log.getLog("Q2", "DB"); // Q2 standard Logger
+            this.log = Log.getLog("Q2", "DB"); // Q2 standard Logger
         }
         return log;
     }
 
-    public synchronized void setLog(Log log)
+    public void setLog(Log log)
     {
         this.log = log;
     }
