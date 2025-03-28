@@ -12,7 +12,7 @@ ext {
     jaxrsVersion = '2.0.1'
     jsonSchemaVersion = '2.2.11'
     guavaVersion = '31.0.1-jre'
-    jacksonVersion = '2.10.5.1'
+    jacksonVersion = '2.18.3'
     groovyVersion = '3.0.4'
     jlineVersion = '2.14.6'
     restAssuredVersion = '2.9.0'
@@ -119,6 +119,7 @@ ext {
 
             // Jackson
             jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
+            jacksonjsr310:   "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
 
             // Netty
             nettyHandler: "io.netty:netty-handler:${nettyVersion}",

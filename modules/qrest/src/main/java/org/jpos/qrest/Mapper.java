@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jpos.util.Tags;
 
 import java.text.SimpleDateFormat;
@@ -41,6 +42,7 @@ public class Mapper {
           .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
           .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
           .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
+          .registerModule(new JavaTimeModule())
           .registerModule(tags);
 
         mapperNoNulls = mapperDefault.copy()
